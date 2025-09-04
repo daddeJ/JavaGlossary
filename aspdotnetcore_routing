@@ -1,0 +1,273 @@
+# Routing and Attribute Routing
+
+## Introduction
+
+In ASP.NET Core, routing and attribute routing are fundamental techniques to map incoming HTTP requests to the appropriate actions in an API. This lesson covers the essentials of configuring routes, the flexibility provided by attribute routing, and advanced techniques like constraints, query parameters, and catch-all routes, all of which contribute to building scalable, responsive web APIs.
+
+## Overview of Routing in ASP.NET Core
+
+### Purpose of Routing
+
+Routing enables ASP.NET Core applications to direct incoming HTTP requests to the correct functions or controllers based on URL patterns. By defining routes, developers can create APIs that accurately and efficiently handle requests, which is critical for scalability.
+
+### Basic Route Definition
+
+Routes are defined using methods such as `app.MapGet`, `app.MapPost`, and others, each corresponding to specific HTTP actions. These routes, configured in `Program.cs`, direct requests based on URL paths like `/users` or `/products/{id}`. Static routes require exact matches, while dynamic routes use placeholders (e.g., `{id}`) to accept variable input.
+
+### Core Routing Components
+
+- **Route parameters:** Dynamic placeholders like `{id}` make routes flexible, supporting different inputs in the same route.
+- **Optional parameters:** Using a `?`, optional parameters allow routes to function even when specific data is absent, increasing flexibility.
+- **Constraints:** Constraints ensure data validity by limiting the types or values a route parameter can accept, such as only positive integers for an ID.
+
+## Attribute Routing and Advanced Techniques
+
+### Attribute Routing in ASP.NET Core
+
+Attribute routing allows developers to define routes directly within controller actions, providing control over individual endpoints. This approach is particularly useful for creating customized paths in complex applications, as it keeps route definitions close to the code they support.
+
+#### Basic Attribute Routing Examples
+
+```csharp
+[ApiController]
+[Route("api/[controller]")]
+public class ProductsController : ControllerBase
+{
+    // GET: api/products
+    [HttpGet]
+    public IActionResult GetAllProducts()
+    {
+        // Implementation
+        return Ok();
+    }
+    
+    // GET: api/products/5
+    [HttpGet("{id}")]
+    public IActionResult GetProduct(int id)
+    {
+        // Implementation
+        return Ok();
+    }
+    
+    // Custom route: GET: api/products/featured
+    [HttpGet("featured")]
+    public IActionResult GetFeaturedProducts()
+    {
+        // Implementation
+        return Ok();
+    }
+}
+```
+
+### Advanced Routing Techniques
+
+#### Route Constraints
+
+Constraints like `int:min(0)` validate parameters, ensuring inputs match specified criteria (e.g., positive integers).
+
+```csharp
+[HttpGet("{id:int:min(1)}")]
+public IActionResult GetProduct(int id)
+{
+    // Only accepts positive integers for id
+    return Ok();
+}
+
+[HttpGet("{category:alpha}/{id:int}")]
+public IActionResult GetProductByCategory(string category, int id)
+{
+    // category must contain only letters, id must be an integer
+    return Ok();
+}
+```
+
+#### Common Route Constraints
+
+| Constraint | Description | Example |
+|------------|-------------|---------|
+| `int` | Integer values | `{id:int}` |
+| `bool` | Boolean values | `{active:bool}` |
+| `datetime` | DateTime values | `{date:datetime}` |
+| `decimal` | Decimal values | `{price:decimal}` |
+| `double` | Double values | `{weight:double}` |
+| `float` | Float values | `{height:float}` |
+| `guid` | GUID values | `{userId:guid}` |
+| `long` | Long values | `{bigId:long}` |
+| `min(value)` | Minimum value | `{id:int:min(1)}` |
+| `max(value)` | Maximum value | `{id:int:max(100)}` |
+| `range(min,max)` | Value range | `{id:int:range(1,100)}` |
+| `alpha` | Alphabetic characters | `{name:alpha}` |
+| `regex(pattern)` | Regular expression | `{code:regex(^[A-Z]{{3}}$)}` |
+| `length(value)` | Exact length | `{code:length(5)}` |
+| `minlength(value)` | Minimum length | `{name:minlength(2)}` |
+| `maxlength(value)` | Maximum length | `{name:maxlength(50)}` |
+
+#### Catch-All Routes
+
+The `{*filePath}` syntax captures all remaining segments in a path, helpful in serving files or content.
+
+```csharp
+[HttpGet("files/{*filePath}")]
+public IActionResult ServeFile(string filePath)
+{
+    // filePath captures everything after "files/"
+    // Example: /files/documents/report.pdf -> filePath = "documents/report.pdf"
+    return Ok($"Serving file: {filePath}");
+}
+```
+
+#### Query Parameters
+
+Parameters specified outside the route, like `/search?q=aspnet&page=2`, enable requests to carry additional information without changing the URL structure.
+
+```csharp
+[HttpGet("search")]
+public IActionResult Search(string q, int page = 1, int size = 10)
+{
+    // Query parameters are automatically bound
+    // GET: /api/products/search?q=laptop&page=2&size=20
+    return Ok($"Searching for '{q}', page {page}, size {size}");
+}
+```
+
+#### Combining Routing Components
+
+ASP.NET Core enables combining static paths, parameters, optional values, and constraints to handle complex scenarios dynamically, as in the route `/store/{category}/{productId:int?}/{*extraPath}`.
+
+```csharp
+[HttpGet("store/{category}/{productId:int?}/{*extraPath}")]
+public IActionResult ComplexRoute(string category, int? productId, string extraPath)
+{
+    // Examples:
+    // /store/electronics -> category="electronics", productId=null, extraPath=null
+    // /store/electronics/123 -> category="electronics", productId=123, extraPath=null
+    // /store/electronics/123/reviews/recent -> category="electronics", productId=123, extraPath="reviews/recent"
+    
+    return Ok(new { category, productId, extraPath });
+}
+```
+
+### Multiple Routes on Single Action
+
+You can define multiple routes for a single action:
+
+```csharp
+[HttpGet("products/{id:int}")]
+[HttpGet("items/{id:int}")]
+public IActionResult GetById(int id)
+{
+    // Accessible via both /products/5 and /items/5
+    return Ok();
+}
+```
+
+### Route Precedence and Order
+
+When multiple routes could match a request, ASP.NET Core uses the following precedence:
+
+1. **Exact matches** (static routes) have highest priority
+2. **Routes with constraints** have higher priority than those without
+3. **Routes with fewer parameters** have higher priority
+4. **Routes defined first** have higher priority among otherwise equal routes
+
+```csharp
+[HttpGet("special")]           // Highest priority - exact match
+[HttpGet("{id:int}")]         // Medium priority - has constraint
+[HttpGet("{name}")]           // Lowest priority - no constraint
+public IActionResult MultipleRoutes(string value)
+{
+    return Ok();
+}
+```
+
+### Route Names and URL Generation
+
+You can name routes for URL generation:
+
+```csharp
+[HttpGet("{id:int}", Name = "GetProduct")]
+public IActionResult GetProduct(int id)
+{
+    return Ok();
+}
+
+[HttpPost]
+public IActionResult CreateProduct(Product product)
+{
+    // Generate URL using route name
+    var url = Url.RouteUrl("GetProduct", new { id = product.Id });
+    return Created(url, product);
+}
+```
+
+## Minimal API Routing
+
+For minimal APIs (configured in `Program.cs`), routing works similarly:
+
+```csharp
+// Basic routes
+app.MapGet("/", () => "Hello World!");
+app.MapGet("/users", () => new[] { "Alice", "Bob" });
+
+// Route parameters
+app.MapGet("/users/{id:int}", (int id) => $"User {id}");
+
+// Optional parameters
+app.MapGet("/products/{category?}", (string? category) => 
+    category == null ? "All products" : $"Products in {category}");
+
+// Constraints
+app.MapGet("/items/{id:int:min(1)}", (int id) => $"Item {id}");
+
+// Catch-all
+app.MapGet("/files/{*path}", (string path) => $"File path: {path}");
+
+// Query parameters
+app.MapGet("/search", (string? q, int page = 1) => $"Search: {q}, Page: {page}");
+```
+
+## Best Practices
+
+1. **Use meaningful route patterns** that reflect your API structure
+2. **Apply appropriate constraints** to validate input early
+3. **Keep routes consistent** across your application
+4. **Use versioning** in routes when needed (`/api/v1/products`)
+5. **Document your routes** clearly for API consumers
+6. **Test edge cases** with optional parameters and constraints
+7. **Consider SEO and user experience** when designing public-facing routes
+
+## Common Patterns
+
+### RESTful API Routes
+
+```csharp
+[Route("api/[controller]")]
+public class ProductsController : ControllerBase
+{
+    [HttpGet]                           // GET /api/products
+    [HttpGet("{id:int}")]              // GET /api/products/5
+    [HttpPost]                         // POST /api/products
+    [HttpPut("{id:int}")]              // PUT /api/products/5
+    [HttpDelete("{id:int}")]           // DELETE /api/products/5
+    
+    // Nested resources
+    [HttpGet("{id:int}/reviews")]      // GET /api/products/5/reviews
+    [HttpPost("{id:int}/reviews")]     // POST /api/products/5/reviews
+}
+```
+
+### Versioned APIs
+
+```csharp
+[Route("api/v{version:apiVersion}/[controller]")]
+[ApiVersion("1.0")]
+[ApiVersion("2.0")]
+public class ProductsController : ControllerBase
+{
+    // Routes will be: /api/v1/products and /api/v2/products
+}
+```
+
+## Conclusion
+
+ASP.NET Core's routing and attribute routing features are integral to creating flexible and robust APIs. With advanced configurations like constraints, query parameters, and catch-all routes, developers can ensure precise request handling, making ASP.NET Core an excellent choice for building scalable, responsive web applications.
