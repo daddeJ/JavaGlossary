@@ -1,3 +1,298 @@
+# ASP.NET Core Middleware - Table of Contents & Categories
+
+## Overview
+This document organizes ASP.NET Core middleware components by their primary purpose and provides a comprehensive table of contents for easy navigation and understanding of the request pipeline architecture.
+
+---
+
+## Table of Contents
+
+### 1. [Security & Protection Middleware](#1-security--protection-middleware)
+- [Authentication Middleware](#authentication-middleware)
+- [Authorization Middleware](#authorization-middleware) 
+- [CORS Middleware](#cors-middleware)
+- [Cookie Policy Middleware](#cookie-policy-middleware)
+- [HTTPS & Transport Security](#https--transport-security)
+
+### 2. [Request Processing & Routing](#2-request-processing--routing)
+- [Routing Middleware](#routing-middleware)
+- [Endpoint Mapping](#endpoint-mapping)
+- [Static File Serving](#static-file-serving)
+
+### 3. [Performance & Optimization](#3-performance--optimization)
+- [Caching Middleware](#caching-middleware)
+- [Compression Middleware](#compression-middleware)
+- [Response Optimization](#response-optimization)
+
+### 4. [Communication & Real-time](#4-communication--real-time)
+- [WebSocket Support](#websocket-support)
+- [Session Management](#session-management)
+
+### 5. [Error Handling & Diagnostics](#5-error-handling--diagnostics)
+- [Exception Handling](#exception-handling)
+- [Status Code Pages](#status-code-pages)
+- [Health Checks](#health-checks)
+- [Development Tools](#development-tools)
+
+### 6. [Infrastructure & Configuration](#6-infrastructure--configuration)
+- [Proxy & Load Balancer Support](#proxy--load-balancer-support)
+- [Localization & Internationalization](#localization--internationalization)
+- [API Documentation](#api-documentation)
+
+### 7. [Custom & Extensibility](#7-custom--extensibility)
+- [Custom Middleware](#custom-middleware)
+- [Middleware Pipeline Order](#middleware-pipeline-order)
+
+---
+
+## 1. Security & Protection Middleware
+
+### Authentication Middleware
+| Middleware | Purpose | Primary Use Case |
+|------------|---------|------------------|
+| `UseAuthentication` | Identifies and validates users | JWT tokens, cookies, OAuth providers |
+
+### Authorization Middleware
+| Middleware | Purpose | Primary Use Case |
+|------------|---------|------------------|
+| `UseAuthorization` | Enforces access control policies | Role-based, policy-based, claim-based authorization |
+
+### CORS Middleware
+| Middleware | Purpose | Primary Use Case |
+|------------|---------|------------------|
+| `UseCors` | Manages cross-origin resource sharing | API access from web browsers, SPA applications |
+
+### Cookie Policy Middleware
+| Middleware | Purpose | Primary Use Case |
+|------------|---------|------------------|
+| `UseCookiePolicy` | Handles cookie consent and compliance | GDPR compliance, privacy regulations |
+
+### HTTPS & Transport Security
+| Middleware | Purpose | Primary Use Case |
+|------------|---------|------------------|
+| `UseHttpsRedirection` | Redirects HTTP requests to HTTPS | Enforcing secure connections |
+| `UseHsts` | Enforces HTTPS-only communication | Browser security, preventing downgrade attacks |
+
+---
+
+## 2. Request Processing & Routing
+
+### Routing Middleware
+| Middleware | Purpose | Primary Use Case |
+|------------|---------|------------------|
+| `UseRouting` | Matches requests to endpoints | URL pattern matching, route resolution |
+
+### Endpoint Mapping
+| Middleware | Purpose | Primary Use Case |
+|------------|---------|------------------|
+| `MapControllers` | Maps MVC controller actions | Traditional MVC applications |
+| `MapGet/Post/Put/Delete` | Maps minimal API endpoints | Lightweight APIs, microservices |
+| `UseEndpoints` | Configures endpoint execution | Custom endpoint routing |
+
+### Static File Serving
+| Middleware | Purpose | Primary Use Case |
+|------------|---------|------------------|
+| `UseStaticFiles` | Serves static content (CSS, JS, images) | Web applications, asset delivery |
+| `UseDefaultFiles` | Serves default documents (index.html) | SPA applications, static websites |
+| `UseFileServer` | Combined static files + directory browsing | File management applications |
+
+---
+
+## 3. Performance & Optimization
+
+### Caching Middleware
+| Middleware | Purpose | Primary Use Case |
+|------------|---------|------------------|
+| `UseResponseCaching` | Caches HTTP responses | API response caching, performance optimization |
+
+### Compression Middleware
+| Middleware | Purpose | Primary Use Case |
+|------------|---------|------------------|
+| `UseResponseCompression` | Compresses responses (gzip, brotli) | Bandwidth optimization, faster loading |
+
+### Response Optimization
+| Middleware | Purpose | Primary Use Case |
+|------------|---------|------------------|
+| Response headers | Optimizes response metadata | Cache control, security headers |
+
+---
+
+## 4. Communication & Real-time
+
+### WebSocket Support
+| Middleware | Purpose | Primary Use Case |
+|------------|---------|------------------|
+| `UseWebSockets` | Enables WebSocket connections | Real-time chat, live updates, gaming |
+
+### Session Management
+| Middleware | Purpose | Primary Use Case |
+|------------|---------|------------------|
+| `UseSession` | Server-side session state | User preferences, shopping carts, temporary data |
+
+---
+
+## 5. Error Handling & Diagnostics
+
+### Exception Handling
+| Middleware | Purpose | Primary Use Case |
+|------------|---------|------------------|
+| `UseDeveloperExceptionPage` | Detailed error pages for development | Debugging, development environment |
+| `UseExceptionHandler` | Global exception handling for production | User-friendly error pages, error logging |
+
+### Status Code Pages
+| Middleware | Purpose | Primary Use Case |
+|------------|---------|------------------|
+| `UseStatusCodePages` | Custom responses for HTTP status codes | 404 pages, error handling |
+
+### Health Checks
+| Middleware | Purpose | Primary Use Case |
+|------------|---------|------------------|
+| `UseHealthChecks` | Application health monitoring | Load balancer checks, monitoring systems |
+
+### Development Tools
+| Middleware | Purpose | Primary Use Case |
+|------------|---------|------------------|
+| Error pages | Development-time diagnostics | Debugging, troubleshooting |
+
+---
+
+## 6. Infrastructure & Configuration
+
+### Proxy & Load Balancer Support
+| Middleware | Purpose | Primary Use Case |
+|------------|---------|------------------|
+| `UseForwardedHeaders` | Handles proxy headers | Reverse proxy deployments, load balancers |
+
+### Localization & Internationalization
+| Middleware | Purpose | Primary Use Case |
+|------------|---------|------------------|
+| `UseRequestLocalization` | Culture and language support | Multi-language applications, global apps |
+
+### API Documentation
+| Middleware | Purpose | Primary Use Case |
+|------------|---------|------------------|
+| `UseSwagger` | Generates OpenAPI specifications | API documentation generation |
+| `UseSwaggerUI` | Interactive API documentation | Developer tools, API testing |
+
+---
+
+## 7. Custom & Extensibility
+
+### Custom Middleware
+| Middleware | Purpose | Primary Use Case |
+|------------|---------|------------------|
+| `UseMiddleware<T>` | Custom application logic | Logging, metrics, business logic |
+
+---
+
+## Middleware Categories by Purpose
+
+### 🔐 Security-First Middleware
+**Purpose:** Protect application from threats and ensure secure communication
+- `UseHttpsRedirection`
+- `UseHsts` 
+- `UseAuthentication`
+- `UseAuthorization`
+- `UseCors`
+- `UseCookiePolicy`
+
+### 🚀 Performance-Focused Middleware
+**Purpose:** Optimize response times and resource usage
+- `UseResponseCompression`
+- `UseResponseCaching`
+- `UseStaticFiles`
+- `UseDefaultFiles`
+
+### 🛣️ Request Routing Middleware
+**Purpose:** Direct requests to appropriate handlers
+- `UseRouting`
+- `MapControllers`
+- `MapGet/Post/Put/Delete`
+- `UseEndpoints`
+
+### 🔧 Diagnostics & Monitoring Middleware
+**Purpose:** Monitor application health and handle errors
+- `UseDeveloperExceptionPage`
+- `UseExceptionHandler`
+- `UseStatusCodePages`
+- `UseHealthChecks`
+
+### 🌐 Communication Middleware
+**Purpose:** Enable different communication patterns
+- `UseWebSockets`
+- `UseSession`
+
+### ⚙️ Infrastructure Middleware  
+**Purpose:** Handle deployment and operational concerns
+- `UseForwardedHeaders`
+- `UseRequestLocalization`
+- `UseSwagger`
+- `UseSwaggerUI`
+
+---
+
+## Recommended Pipeline Order
+
+The middleware pipeline should follow this general order for optimal functionality:
+
+```
+1. Exception Handling (Development/Production)
+2. Security Headers (HSTS, HTTPS Redirection)  
+3. Static Files (Early for performance)
+4. Forwarded Headers (Proxy support)
+5. Routing
+6. CORS (After routing, before authentication)
+7. Authentication 
+8. Authorization
+9. Custom Business Logic Middleware
+10. Session Management
+11. Response Optimization (Caching, Compression)
+12. Endpoint Execution
+```
+
+---
+
+## Selection Guide by Application Type
+
+### 🌐 Web API Applications
+**Essential Middleware:**
+- `UseRouting` + `MapControllers`
+- `UseAuthentication` + `UseAuthorization`
+- `UseCors`
+- `UseResponseCompression`
+- `UseSwagger` + `UseSwaggerUI`
+
+### 📱 Single Page Applications (SPA)
+**Essential Middleware:**
+- `UseStaticFiles` + `UseDefaultFiles`
+- `UseRouting`
+- `UseCors`
+- `UseAuthentication` + `UseAuthorization`
+
+### 🌍 Multi-tenant Applications
+**Essential Middleware:**
+- `UseRequestLocalization`
+- `UseAuthentication` + `UseAuthorization`
+- `UseSession`
+- Custom tenant resolution middleware
+
+### 🔄 Real-time Applications
+**Essential Middleware:**
+- `UseWebSockets`
+- `UseAuthentication` + `UseAuthorization`
+- `UseCors`
+- Custom connection management middleware
+
+### 📊 Microservices
+**Essential Middleware:**
+- `UseHealthChecks`
+- `UseAuthentication` + `UseAuthorization`
+- `UseForwardedHeaders`
+- `UseResponseCompression`
+- Custom service discovery middleware
+
+This categorization helps developers understand the purpose of each middleware component and select the appropriate ones based on their application requirements and architecture.
+
 # ASP.NET Core Middleware Guide
 
 ## Introduction
